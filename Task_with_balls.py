@@ -1,18 +1,31 @@
-ball = "B.BB..B.BB.B.BBBBBBBBBB............"
+ball = "B.BB.B.B.B.B.B.BBBBBB.............."
 
-def search_iter (x):
-    list_ball = list(x)
 
-    if list_ball.count("B")-1 > list_ball.count("."):
-        return -1
+# you can write to stdout for debugging purposes, e.g.
+# print("this is a debug message")
 
-    count = 0
-    for i in x.split("."):
-        if i == "B":
-            continue
-        else:
-            count += len(i)//2
+def solution(buckets):
+    m = buckets.count('B')  # Підрахунок кількості символів 'B'
+    if m == 0:
+        return 0
 
-    return count
+    n = len(buckets)
+    r = -1
+    for d in range(2):
+        first = d
+        last = d + 2 * (m - 1)
+        if last >= n:
+            break
 
-print(search_iter(ball))
+        may = sum(1 for i in range(first, last + 1, 2) if buckets[i] == 'B')
+        r = max(r, may)
+
+        for last in range(last + 2, n, 2):
+            may += buckets[last] == 'B'
+            may -= buckets[first] == 'B'
+            first += 2
+            r = max(r, may)
+
+    return r if r < 0 else (m - r)
+
+print(solution(ball))
